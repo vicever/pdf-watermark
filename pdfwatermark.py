@@ -4,8 +4,8 @@ os.getcwd()
 os.chdir('D:\\sourcecode\\python\\test')  ##设置需要进行读取的操作目录
 os.getcwd()    #获取当前工作目录
 
-sourcefile = 'SBS1单词汇总.pdf'           ##需要加上水印的原文件  
-filename = '分析报告'                     ##生成后命名的文件内容
+sourcefile = '互金公司营销月报-2020年2月.pdf'           ##需要加上水印的原文件  
+filename = '互金公司2020年2月营销月报'                     ##生成后命名的文件内容
 #password = 'bestpay'       ## PDF的密码,设置为空则不设密码访问
 password = ''
 listfile = 'watermark.xlsx'    ##批量名单获取的文件，清单在Sheet1，从第2行开始的第2列内容
@@ -19,17 +19,44 @@ from PyPDF2 import PdfFileWriter,PdfFileReader
 import xlrd
   
 ######## 1.生成水印pdf的函数 ########
-def create_watermark(content):
+def create_watermark(content, marktype):
     #默认大小为21cm*29.7cm
-    c = canvas.Canvas('mark.pdf', pagesize = (30*cm, 30*cm))   
-    c.translate(10*cm, 10*cm) #移动坐标原点(坐标系左下为(0,0)))                                                                                                                             
-    c.setFont('song',22)#设置字体为宋体，大小22号
-    c.setFillColorRGB(0.5,0.5,0.5)#灰色                                                                                                                         
-    c.rotate(45)#旋转45度，坐标系被旋转
-    c.drawString(-7*cm, 0*cm, content)
-    c.drawString(7*cm, 0*cm, content)
-    c.drawString(0*cm, 7*cm, content)
-    c.drawString(0*cm, -7*cm, content)                                                                                                                              
+
+    c = canvas.Canvas('mark.pdf', pagesize = (35*cm, 20*cm))   ##改了大小
+    if marktype == 1 :
+        c.translate(17*cm, 10*cm) #移动坐标原点(坐标系左下为(0,0)))                                                                                                                             
+        c.setFont('song',22)#设置字体为宋体，大小22号
+        c.setFillColorRGB(0.8,0.8,0.8)#灰色                                                                                                                         
+        c.drawString(0*cm, 0*cm, content)
+        c.drawString(-11*cm, 0*cm, content)
+        c.drawString(11*cm, 0*cm, content)
+        c.drawString(0*cm, 7*cm, content)
+        c.drawString(0*cm, -7*cm, content)          
+        c.drawString(-9*cm, -7*cm, content) 
+        c.drawString(9*cm, -7*cm, content) 
+        c.drawString(-9*cm, 7*cm, content) 
+        c.drawString(9*cm, 7*cm, content)
+        c.drawString(-7*cm, 14*cm, content) 
+        c.drawString(3*cm, -14*cm, content)           
+        #c.drawString(0*cm, -7*cm, content) 
+    else:
+        c.translate(17*cm, 10*cm) #移动坐标原点(坐标系左下为(0,0)))                                                                                                                             
+        c.setFont('song',22)#设置字体为宋体，大小22号
+        c.setFillColorRGB(0.8,0.8,0.8)#灰色                                                                                                                         
+        c.rotate(45)#旋转45度，坐标系被旋转
+        c.drawString(0*cm, 0*cm, content)
+        c.drawString(-11*cm, 0*cm, content)
+        c.drawString(11*cm, 0*cm, content)
+        c.drawString(0*cm, 7*cm, content)
+        c.drawString(0*cm, -7*cm, content)          
+        c.drawString(-9*cm, -7*cm, content) 
+        c.drawString(9*cm, -7*cm, content) 
+        c.drawString(-9*cm, 7*cm, content) 
+        c.drawString(9*cm, 7*cm, content)
+        c.drawString(-7*cm, 14*cm, content) 
+        c.drawString(3*cm, -14*cm, content)           
+        #c.drawString(0*cm, -7*cm, content)          
+                                                                                                                  
     c.save()#关闭并保存pdf文件
 
 ######## 2.为pdf文件加水印的函数 ########
@@ -61,7 +88,7 @@ merchant_as_mark_content =[(i+'  ')*4 if len(i)<=5 else i for i in col]#如果�
 ######## 4.调用前面的函数制作商家水印pdf ########
 if __name__=='__main__':
     for i,j,k in zip(merchant_as_mark_content,col,id2):#i制作水印，j文件名，k对应ID
-        create_watermark(i)#创造了一个水印pdf：mark.pdf
+        create_watermark(i,0)#创造了一个水印pdf：mark.pdf
         add_watermark2pdf(sourcefile ,k+filename+'('+j+').pdf','mark.pdf')              ##需要加水印
         print('———————已制作好第'+k+'个pdf，正在准备下一个———————')
     print('———————所有文件已转化完毕———————')
